@@ -1,0 +1,27 @@
+Create a high-conversion charity landing page using Next.js 15, Tailwind, and Framer Motion.
+
+Layout & Vibe:
+
+Background: Dark theme with a glowing, animated 'Aurora Borealis' effect in the center.
+
+Hero Section (Center Stage):
+
+A massive, animated number displaying 'Total Raised' (e.g., $12,450). Use a count-up animation.
+
+Directly below it: A prominent, glowing 'Make a Difference' button that triggers a donation modal.
+
+Footer Ticker: A smooth, infinite horizontal scrolling marquee at the bottom showing 'Recent Donations' (e.g., 'Anonymous donated $25 • Sarp donated $50').
+
+Functionality:
+
+The Total Counter and Recent Ticker should be visible to everyone (no login required).
+
+Donation Modal (Dialog):
+
+Step 1: Select Amount ($10, $25, $50, Custom).
+
+Step 2 (Conditional): If user is not logged in, show a placeholder for an Auth form.
+
+Step 3: Credit Card form placeholder.
+
+Use Shadcn/ui components. Make it look trustworthy but futuristic.
