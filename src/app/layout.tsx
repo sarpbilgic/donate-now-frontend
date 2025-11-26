@@ -2,6 +2,8 @@ import type React from "react"
 import type { Metadata } from "next"
 import { JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { QueryProvider } from "@/providers/query-provider"
+import { AuthProvider } from "@/providers/auth-provider"
 import "./globals.css"
 
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] })
@@ -37,8 +39,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${jetbrainsMono.className} antialiased`}>
-        {children}
-        <Analytics />
+        <AuthProvider>
+          <QueryProvider>
+            {children}
+            <Analytics />
+          </QueryProvider>
+        </AuthProvider>
       </body>
     </html>
   )

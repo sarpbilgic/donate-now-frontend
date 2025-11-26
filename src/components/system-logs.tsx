@@ -12,34 +12,88 @@ interface LogEntry {
   amount: number
 }
 
-// Mock data - TODO: Replace with real-time data fetching
-const initialLogs: LogEntry[] = [
-  { id: "1", timestamp: "2023-10-27 14:00:23", type: "INFO", name: "Anonymous", amount: 25 },
-  { id: "2", timestamp: "2023-10-27 13:45:12", type: "SUCCESS", name: "Sarah_M", amount: 10 },
-  { id: "3", timestamp: "2023-10-27 12:30:45", type: "INFO", name: "Anonymous", amount: 5 },
-  { id: "4", timestamp: "2023-10-27 11:15:33", type: "SUCCESS", name: "Mike_T", amount: 50 },
-  { id: "5", timestamp: "2023-10-27 10:00:18", type: "INFO", name: "Anonymous", amount: 10 },
-]
-
 export function SystemLogs() {
   const [logs, setLogs] = useState<LogEntry[]>([])
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    // Simulate loading logs with stagger
+    // Fetch real donations from backend
+    const fetchDonations = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/donations/recent`)
+        const data = await response.json()
+        
+        // Transform backend data to our log format
+        const transformedLogs: LogEntry[] = data.map((donation: any, index: number) => ({
+          id: `${index}`,
+          timestamp: new Date(donation.created_at).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          }).replace(',', ''),
+          type: donation.donor_name === 'Anonymous' ? 'INFO' : 'SUCCESS',
+          name: donation.donor_name,
+          amount: donation.amount / 100 // Convert cents to dollars
+        }))
+        
+        // Stagger the appearance of logs
+        setIsVisible(true)
+        transformedLogs.forEach((log, index) => {
+          setTimeout(() => {
+            setLogs((prev) => [...prev, log])
+          }, index * 200)
+        })
+      } catch (error) {
+        console.error('Error fetching recent donations:', error)
+        // Fallback to empty on error
+        setIsVisible(true)
+      }
+    }
+
     const timeout = setTimeout(() => {
-      setIsVisible(true)
-      initialLogs.forEach((log, index) => {
-        setTimeout(() => {
-          setLogs((prev) => [...prev, log])
-        }, index * 200)
-      })
+      fetchDonations()
     }, 1000)
 
     return () => clearTimeout(timeout)
   }, [])
 
-  // TODO: Replace with real-time subscription for live updates
+  // Poll for updates every 30 seconds
+  useEffect(() => {
+    if (!isVisible) return
+    
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/donations/recent`)
+        const data = await response.json()
+        
+        const transformedLogs: LogEntry[] = data.map((donation: any, index: number) => ({
+          id: `${Date.now()}-${index}`,
+          timestamp: new Date(donation.created_at).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          }).replace(',', ''),
+          type: donation.donor_name === 'Anonymous' ? 'INFO' : 'SUCCESS',
+          name: donation.donor_name,
+          amount: donation.amount / 100
+        }))
+        
+        setLogs(transformedLogs)
+      } catch (error) {
+        console.error('Error polling donations:', error)
+      }
+    }, 30000) // Poll every 30 seconds
+
+    return () => clearInterval(interval)
+  }, [isVisible])
 
   const getTypeColor = (type: LogEntry["type"]) => {
     switch (type) {

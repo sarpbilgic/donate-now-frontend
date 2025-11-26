@@ -4,10 +4,12 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { ChevronRight, Zap } from "lucide-react"
 import { BlinkingCursor } from "@/components/blinking-cursor"
+import { useDonationStore } from "@/lib/store"
 
 const presetAmounts = [10, 25, 50]
 
 export function TerminalDonation() {
+  const { setAmount, setStep, openModal, isAuthenticated } = useDonationStore()
   const [selectedAmount, setSelectedAmount] = useState<number | null>(25)
   const [customAmount, setCustomAmount] = useState("")
   const [isExecuting, setIsExecuting] = useState(false)
@@ -26,13 +28,31 @@ export function TerminalDonation() {
   }
 
   const handleExecute = () => {
-    const amount = customAmount ? Number.parseInt(customAmount) : selectedAmount
+    const donationAmount = customAmount ? Number.parseInt(customAmount) : selectedAmount
+    
+    if (!donationAmount || donationAmount <= 0) {
+      console.error('Invalid amount')
+      return
+    }
+    
+    // Simulate brief loading animation
     setIsExecuting(true)
-    // TODO: Integrate payment processing logic here
+    
     setTimeout(() => {
+      // Set amount in store
+      setAmount(donationAmount)
+      
+      // If user is authenticated, go straight to payment
+      // Otherwise, show auth step first
+      if (isAuthenticated) {
+        setStep('payment')
+      } else {
+        setStep('auth')
+      }
+      
+      openModal()
       setIsExecuting(false)
-      console.log("Executing transfer:", amount)
-    }, 2000)
+    }, 800)
   }
 
   const currentAmount = customAmount || selectedAmount || 0

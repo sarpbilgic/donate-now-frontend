@@ -2,6 +2,7 @@ import { SystemBootHero } from "@/components/system-boot-hero"
 import { TerminalDonation } from "@/components/terminal-donation"
 import { SystemLogs } from "@/components/system-logs"
 import { CrtOverlay } from "@/components/crt-overlay"
+import { DonationModal } from "@/components/donation-modal"
 
 export default function Home() {
   return (
@@ -13,6 +14,9 @@ export default function Home() {
         <TerminalDonation />
         <SystemLogs />
       </div>
+
+      {/* Global Donation Modal */}
+      <DonationModal />
     </main>
   )
 }

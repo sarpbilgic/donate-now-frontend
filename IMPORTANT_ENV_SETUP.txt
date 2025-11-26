@@ -1,0 +1,128 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   ⚠️  IMPORTANT: REQUIRED ENVIRONMENT VARIABLES  ⚠️          ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+The Donation Modal REQUIRES the following environment variables
+to function properly.
+
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Create .env.local file
+──────────────────────────────
+
+In the root of donate-now-frontend/, create a file named:
+
+    .env.local
+
+
+STEP 2: Add these variables
+──────────────────────────────
+
+Copy and paste the following into .env.local:
+
+
+# ============================================
+# REQUIRED: API Backend URL
+# ============================================
+NEXT_PUBLIC_API_URL=http://localhost:8000
+
+
+# ============================================
+# REQUIRED: Stripe Publishable Key
+# ============================================
+# Get this from: https://dashboard.stripe.com/test/apikeys
+# Use TEST key (pk_test_...) for development
+# Use LIVE key (pk_live_...) for production
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY_HERE
+
+
+# ============================================
+# REQUIRED: AWS Cognito Configuration
+# ============================================
+# Get these from: AWS Console → Cognito → Your User Pool
+# User Pool ID: From "User pool overview"
+# Client ID: From "App integration" → "App clients"
+NEXT_PUBLIC_COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+NEXT_PUBLIC_COGNITO_CLIENT_ID=your_client_id_here
+
+
+═══════════════════════════════════════════════════════════════
+
+STEP 3: Get Your Stripe Key
+──────────────────────────────
+
+1. Go to: https://dashboard.stripe.com/test/apikeys
+2. Find "Publishable key" (starts with pk_test_)
+3. Click "Reveal test key"
+4. Copy the key
+5. Paste it in .env.local replacing YOUR_KEY_HERE
+
+
+STEP 4: Restart Your Dev Server
+──────────────────────────────
+
+After adding the .env.local file:
+
+    1. Stop the dev server (Ctrl+C)
+    2. Run: npm run dev
+    3. The modal will now work!
+
+
+═══════════════════════════════════════════════════════════════
+
+🧪 TEST CARDS FOR DEVELOPMENT
+──────────────────────────────
+
+Successful Payment:
+  Card: 4242 4242 4242 4242
+  Expiry: 12/34 (any future date)
+  CVC: 123 (any 3 digits)
+
+Requires 3D Secure:
+  Card: 4000 0027 6000 3184
+
+Declined:
+  Card: 4000 0000 0000 0002
+
+
+═══════════════════════════════════════════════════════════════
+
+❌ WITHOUT THESE VARIABLES:
+──────────────────────────────
+
+- Payment modal will show errors
+- Stripe form won't load
+- You'll see "Failed to load Stripe" message
+- Payment intents won't be created
+
+
+✅ WITH THESE VARIABLES:
+──────────────────────────────
+
+- Full payment flow works
+- Beautiful terminal-themed Stripe form
+- Real-time payment processing
+- Success confirmation
+- Auto-updated donation counter
+
+
+═══════════════════════════════════════════════════════════════
+
+📝 YOUR .env.local SHOULD LOOK LIKE:
+
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51AbC...xyz
+NEXT_PUBLIC_COGNITO_USER_POOL_ID=us-east-1_abc123XYZ
+NEXT_PUBLIC_COGNITO_CLIENT_ID=1a2b3c4d5e6f7g8h9i0j
+
+
+═══════════════════════════════════════════════════════════════
+
+Need help? Check:
+- DONATION_MODAL_COMPLETE.md (full guide)
+- docs/API_INTEGRATION.md (API setup)
+
+═══════════════════════════════════════════════════════════════
+

@@ -16,6 +16,7 @@ export function SystemBootHero() {
   const [bootComplete, setBootComplete] = useState(false)
   const [showStats, setShowStats] = useState(false)
   const [fundAmount, setFundAmount] = useState(0)
+  const [targetAmount, setTargetAmount] = useState(0)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,28 +26,43 @@ export function SystemBootHero() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Animate fund counter
+  // Fetch real total donations from backend
   useEffect(() => {
     if (showStats) {
-      const target = 1250
-      const duration = 1500
-      const steps = 60
-      const increment = target / steps
-      let current = 0
-      const interval = setInterval(() => {
-        current += increment
-        if (current >= target) {
-          setFundAmount(target)
-          clearInterval(interval)
-        } else {
-          setFundAmount(Math.floor(current))
+      const fetchTotalDonations = async () => {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/donations/total`)
+          const data = await response.json()
+          const target = Math.floor(data.total_amount_dollars)
+          setTargetAmount(target)
+          
+          // Animate fund counter
+          const duration = 1500
+          const steps = 60
+          const increment = target / steps
+          let current = 0
+          const interval = setInterval(() => {
+            current += increment
+            if (current >= target) {
+              setFundAmount(target)
+              clearInterval(interval)
+            } else {
+              setFundAmount(Math.floor(current))
+            }
+          }, duration / steps)
+          
+          return () => clearInterval(interval)
+        } catch (error) {
+          console.error('Error fetching total donations:', error)
+          // Fallback to mock data on error
+          setTargetAmount(1250)
+          setFundAmount(1250)
         }
-      }, duration / steps)
-      return () => clearInterval(interval)
+      }
+      
+      fetchTotalDonations()
     }
   }, [showStats])
-
-  // TODO: Replace with real data fetching for total funds
 
   const progressBars = Math.floor((fundAmount / 2000) * 20)
   const progressBar = "[" + "█".repeat(progressBars) + "░".repeat(20 - progressBars) + "]"
