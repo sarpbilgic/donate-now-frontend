@@ -125,3 +125,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide Stripe developer tools popup in test mode */
+/* This is the floating debug panel that appears in Stripe test/sandbox mode */
+#StripeDevTools,
+[data-stripe-devtools],
+#stripe-devtools-root,
+[data-testid="stripe-devtools"],
+/* Target the Stripe dev tools widget which is typically injected as a fixed div */
+body > div[style*="position: fixed"]:has(> div[style*="background"]):not([class*="Dialog"]):not([role]) {
+  display: none !important;
+}
+
+/* Alternative selector for Stripe's injected dev tools container */
+div[id^="stripe-"][style*="fixed"],
+div[class*="stripe"][style*="fixed"]:not([class*="Element"]) {
+  display: none !important;
+}
+
+/* Hide any fixed position stripe debugging elements but keep Elements */
+body > div:not([class]):not([id])[style*="position: fixed"][style*="bottom: 0"] {
+  display: none !important;
+}

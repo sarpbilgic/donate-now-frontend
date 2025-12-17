@@ -469,6 +469,7 @@ function PaymentStep() {
         borderRadius: '4px',
       },
     },
+    loader: 'auto' as const,
   };
 
   return (
