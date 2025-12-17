@@ -142,7 +142,7 @@ export function SystemBootHero() {
           {/* Social Links */}
           <div className="flex gap-4 pt-2 pl-4">
             <a
-              href="https://github.com"
+              href="https://github.com/sarpbilgic"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors text-sm group"
@@ -151,7 +151,7 @@ export function SystemBootHero() {
               <span className="group-hover:underline">./github.sh</span>
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/sarp-emre-bilgi%C3%A7-160808298"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors text-sm group"
